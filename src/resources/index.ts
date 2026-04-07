@@ -6,7 +6,7 @@ import { getDatabase } from "../database.js";
 import { getFullSchema, getTablesList, getTableSchema } from "./schema.js";
 
 export function registerResources(server: McpServer): void {
-  server.resource(
+  server.registerResource(
     "database-schema",
     "sqlite://schema",
     { description: "Full database schema (all CREATE statements)" },
@@ -21,7 +21,7 @@ export function registerResources(server: McpServer): void {
     })
   );
 
-  server.resource(
+  server.registerResource(
     "tables-list",
     "sqlite://tables",
     { description: "List of all tables and views" },
@@ -36,7 +36,7 @@ export function registerResources(server: McpServer): void {
     })
   );
 
-  server.resource(
+  server.registerResource(
     "table-schema",
     new ResourceTemplate("sqlite://tables/{name}/schema", {
       list: async () => {

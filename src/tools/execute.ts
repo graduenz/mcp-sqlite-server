@@ -6,10 +6,12 @@ export function registerExecuteTool(
   server: McpServer,
   readonly: boolean
 ): void {
-  server.tool(
+  server.registerTool(
     "execute",
-    "Execute a write SQL statement (INSERT, UPDATE, DELETE, CREATE TABLE, etc.)",
-    { sql: z.string().describe("The SQL statement to execute") },
+    {
+      description: "Execute a write SQL statement (INSERT, UPDATE, DELETE, CREATE TABLE, etc.)",
+      inputSchema: { sql: z.string().describe("The SQL statement to execute") },
+    },
     async ({ sql }) => {
       if (readonly) {
         return {

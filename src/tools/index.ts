@@ -22,10 +22,11 @@ interface IndexInfo {
 }
 
 function registerListTablesTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     "list_tables",
-    "List all tables and views in the database",
-    {},
+    {
+      description: "List all tables and views in the database",
+    },
     async () => {
       try {
         const db = getDatabase();
@@ -57,13 +58,15 @@ function registerListTablesTool(server: McpServer): void {
 }
 
 function registerDescribeTableTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     "describe_table",
-    "Get detailed schema for a specific table including columns, types, constraints, and indexes",
     {
-      table: z
-        .string()
-        .describe("The name of the table or view to describe"),
+      description: "Get detailed schema for a specific table including columns, types, constraints, and indexes",
+      inputSchema: {
+        table: z
+          .string()
+          .describe("The name of the table or view to describe"),
+      },
     },
     async ({ table }) => {
       try {

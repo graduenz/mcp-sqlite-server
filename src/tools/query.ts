@@ -3,10 +3,12 @@ import { z } from "zod";
 import { getDatabase } from "../database.js";
 
 export function registerQueryTool(server: McpServer): void {
-  server.tool(
+  server.registerTool(
     "query",
-    "Execute a read-only SQL query (SELECT) and return results as JSON",
-    { sql: z.string().describe("The SQL SELECT query to execute") },
+    {
+      description: "Execute a read-only SQL query (SELECT) and return results as JSON",
+      inputSchema: { sql: z.string().describe("The SQL SELECT query to execute") },
+    },
     async ({ sql }) => {
       try {
         const db = getDatabase();
