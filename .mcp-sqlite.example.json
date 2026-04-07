@@ -1,0 +1,5 @@
+{
+  "database": "./data.sqlite",
+  "readonly": false,
+  "wal": true
+}
