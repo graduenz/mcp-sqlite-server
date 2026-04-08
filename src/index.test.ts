@@ -10,7 +10,12 @@ function waitForExit(
 ): Promise<{ code: number | null; signal: NodeJS.Signals | null; stderr: string }> {
   return new Promise((resolve, reject) => {
     let stderr = "";
-    child.stderr.on("data", (chunk) => {
+    const stderrStream = child.stderr;
+    if (!stderrStream) {
+      reject(new Error("Child process stderr is unavailable"));
+      return;
+    }
+    stderrStream.on("data", (chunk) => {
       stderr += String(chunk);
     });
     child.on("error", reject);
