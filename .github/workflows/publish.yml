@@ -42,5 +42,13 @@ jobs:
             exit 1
           fi
 
+      - name: Publish diagnostics
+        shell: bash
+        run: |
+          PKG_NAME="$(node -p "require('./package.json').name")"
+          echo "Preparing to publish: $PKG_NAME@$GITHUB_REF_NAME"
+          echo "Registry: $(npm config get registry)"
+          npm view "$PKG_NAME" version || echo "Package not found yet (expected on first publish)."
+
       - name: Publish package
         run: npm publish --provenance --access public
