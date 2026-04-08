@@ -64,3 +64,10 @@ const db = new Database(...); // never do this outside of withDatabase
 - No comments that narrate what the code does — only explain non-obvious intent or trade-offs
 - Tool handlers must catch errors and return `{ isError: true }` rather than throwing
 - Prefer explicit `finally { db.close() }` for any manual DB handle management (though `withDatabase` handles this automatically)
+
+## SonarQube Scan
+
+SonarQube is used to scan this project in GitHub.
+- Organization: `graduenz`.
+- Project key: `graduenz_graduenz_mcp-sqlite-server`.
+- Analysis snapshots are only indexed after pushing the code, which is done manually, so after fixing SonarQube issues, don't worry about checking if they have been resolved.
