@@ -57,6 +57,21 @@ npm run build
 
 This compiles TypeScript to `dist/`. Test files are excluded from the build output via `tsconfig.json`.
 
+## Validation
+
+Use explicit typecheck scripts to validate both production and test TypeScript:
+
+```bash
+npm run typecheck
+npm run typecheck:test
+```
+
+Or run the full pipeline:
+
+```bash
+npm run validate
+```
+
 ## Testing
 
 The test suite uses Node's built-in test runner (`node:test`) with TypeScript executed directly via `tsx`. No additional test dependencies are needed.

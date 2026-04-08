@@ -36,6 +36,12 @@ npm install
 npm run build
 ```
 
+For full local validation (including TypeScript checks for tests), run:
+
+```bash
+npm run validate
+```
+
 ## Configuration
 
 Create a `.mcp-sqlite.json` file in the project/workspace that will use this MCP server:
