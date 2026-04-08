@@ -2,6 +2,24 @@
 
 An MCP (Model Context Protocol) server that provides tools and resources for interacting with SQLite databases via [better-sqlite3](https://github.com/WiseLibs/better-sqlite3).
 
+## Table of Contents
+
+- [mcp-sqlite-server](#mcp-sqlite-server)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Setup](#setup)
+  - [Configuration](#configuration)
+  - [Tools](#tools)
+    - [`query`](#query)
+    - [`execute`](#execute)
+    - [`list_tables`](#list_tables)
+    - [`describe_table`](#describe_table)
+  - [Resources](#resources)
+  - [Contributing](#contributing)
+  - [Cursor MCP Configuration](#cursor-mcp-configuration)
+  - [License](#license)
+
+
 ## Features
 
 - **Query & Execute** -- run read and write SQL statements
@@ -70,6 +88,10 @@ Get detailed schema for a specific table including columns, types, constraints, 
 | `sqlite://schema`                 | Full database schema (all DDL statements)|
 | `sqlite://tables`                 | List of all tables and views             |
 | `sqlite://tables/{name}/schema`   | Schema details for a specific table      |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions, testing, code conventions, and guidance on adding new tools, resources, and config fields.
 
 ## Cursor MCP Configuration
 
