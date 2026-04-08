@@ -21,13 +21,31 @@ async function main(): Promise<void> {
   const transport = new StdioServerTransport();
   await server.connect(transport);
 
+  let shuttingDown = false;
   const shutdown = async () => {
-    await server.close();
-    process.exit(0);
+    if (shuttingDown) {
+      return;
+    }
+    shuttingDown = true;
+
+    try {
+      await Promise.race([
+        server.close(),
+        new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error("Server close timed out"));
+          }, 3000);
+        }),
+      ]);
+    } catch (err) {
+      console.error("Fatal during shutdown:", err);
+    } finally {
+      process.exit(0);
+    }
   };
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
 }
 
 try {

@@ -6,10 +6,12 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 function waitForExit(
-  child: ReturnType<typeof spawn>
+  child: ReturnType<typeof spawn>,
+  timeoutMs = 5000
 ): Promise<{ code: number | null; signal: NodeJS.Signals | null; stderr: string }> {
   return new Promise((resolve, reject) => {
     let stderr = "";
+    let settled = false;
     const stderrStream = child.stderr;
     if (!stderrStream) {
       reject(new Error("Child process stderr is unavailable"));
@@ -18,8 +20,31 @@ function waitForExit(
     stderrStream.on("data", (chunk) => {
       stderr += String(chunk);
     });
-    child.on("error", reject);
-    child.on("exit", (code, signal) => resolve({ code, signal, stderr }));
+    const timer = setTimeout(() => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      child.kill("SIGKILL");
+      reject(new Error(`Child process did not exit within ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    child.on("error", (err) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.on("exit", (code, signal) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      resolve({ code, signal, stderr });
+    });
   });
 }
 
@@ -54,10 +79,10 @@ describe("index entrypoint", () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       child.kill("SIGTERM");
-      const result = await waitForExit(child);
+      const result = await waitForExit(child, 7000);
       assert.ok(result.code === 0 || result.signal === "SIGTERM");
     } finally {
-      if (!child.killed) {
+      if (child.exitCode === null && !child.killed) {
         child.kill("SIGKILL");
       }
       rmSync(tempDir, { recursive: true, force: true });
