@@ -1,8 +1,10 @@
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, unlinkSync } from "node:fs";
+import { mkdtempSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { spawnSync } from "node:child_process";
+import { pathToFileURL } from "node:url";
 import Database from "better-sqlite3";
 import { initDatabase, withDatabase } from "./database.js";
 import type { Config } from "./config.js";
@@ -62,11 +64,32 @@ describe("database", () => {
 
   describe("withDatabase", () => {
     it("throws if called before initDatabase", () => {
-      // Force a fresh module state by using a config that hasn't been inited.
-      // Since we called initDatabase in earlier tests within the same process,
-      // the module-level storedConfig may already be set. We test the error
-      // message pattern instead of relying on module reset.
-      // This test is best-effort in a shared-process runner.
+      const scriptPath = join(tempDir, "preinit-check.mjs");
+      const databaseModulePath = pathToFileURL(
+        join(process.cwd(), "src", "database.ts")
+      ).toString();
+      writeFileSync(
+        scriptPath,
+        [
+          `import { withDatabase } from "${databaseModulePath}";`,
+          "try {",
+          "  withDatabase(() => 1);",
+          "  process.exit(2);",
+          "} catch (err) {",
+          "  const msg = err instanceof Error ? err.message : String(err);",
+          '  if (!msg.includes("Call initDatabase() first")) process.exit(3);',
+          "}",
+        ].join("\n"),
+        "utf-8"
+      );
+
+      const result = spawnSync(
+        process.execPath,
+        ["--import", "tsx", scriptPath],
+        { encoding: "utf-8" }
+      );
+
+      assert.equal(result.status, 0, result.stderr || result.stdout);
     });
 
     it("provides a working database handle", () => {

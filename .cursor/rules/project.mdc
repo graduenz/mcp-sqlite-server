@@ -48,6 +48,10 @@ const db = new Database(...); // never do this outside of withDatabase
 
 - Test files are colocated next to source files and named `*.test.ts`
 - Run tests with: `npm test`
+- Generate coverage with: `npm run test:coverage`
+- Coverage expectation: after behavior changes, add/update tests to keep coverage as close to 100% as reasonably possible (especially for touched lines/branches and error paths)
+- Read coverage in terminal from the `c8` summary (`% Stmts`, `% Branch`, `% Funcs`, `% Lines`) and treat any drop as a regression to fix
+- Read file-by-file coverage in HTML at `coverage/lcov-report/index.html`; prioritize files you changed and uncovered branches
 - All tests use temporary SQLite databases created in `os.tmpdir()` and cleaned up in `afterEach`
 - **Always update or add tests when changing source behavior**
 - When adding a new test file, also add it to the `--test` file list in the `"test"` script in `package.json`

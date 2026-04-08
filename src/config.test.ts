@@ -68,6 +68,44 @@ describe("loadConfig", () => {
     assert.equal(config.database, join(tempDir, "subdir", "my.db"));
   });
 
+  it("loads default .mcp-sqlite.json from cwd when --config is not provided", () => {
+    const previousCwd = process.cwd();
+    try {
+      process.chdir(tempDir);
+      writeFileSync(
+        join(tempDir, ".mcp-sqlite.json"),
+        JSON.stringify({ database: "default.db" }),
+        "utf-8"
+      );
+      process.argv = ["node", "index.js"];
+
+      const config = loadConfig();
+      assert.equal(config.database, join(tempDir, "default.db"));
+      assert.equal(config.readonly, false);
+      assert.equal(config.wal, true);
+    } finally {
+      process.chdir(previousCwd);
+    }
+  });
+
+  it("falls back to default config path when --config has no value", () => {
+    const previousCwd = process.cwd();
+    try {
+      process.chdir(tempDir);
+      writeFileSync(
+        join(tempDir, ".mcp-sqlite.json"),
+        JSON.stringify({ database: "fallback.db" }),
+        "utf-8"
+      );
+      process.argv = ["node", "index.js", "--config"];
+
+      const config = loadConfig();
+      assert.equal(config.database, join(tempDir, "fallback.db"));
+    } finally {
+      process.chdir(previousCwd);
+    }
+  });
+
   it("throws when config file is missing", () => {
     setConfigArg(join(tempDir, "nonexistent.json"));
 
