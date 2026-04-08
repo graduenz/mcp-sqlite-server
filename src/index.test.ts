@@ -20,6 +20,16 @@ function waitForExit(
     stderrStream.on("data", (chunk) => {
       stderr += String(chunk);
     });
+
+    if (child.exitCode !== null || child.signalCode !== null) {
+      resolve({
+        code: child.exitCode,
+        signal: child.signalCode,
+        stderr,
+      });
+      return;
+    }
+
     const timer = setTimeout(() => {
       if (settled) {
         return;
@@ -77,9 +87,11 @@ describe("index entrypoint", () => {
     );
 
     try {
+      const exitPromise = waitForExit(child, 7000);
       await new Promise((resolve) => setTimeout(resolve, 500));
-      child.kill("SIGTERM");
-      const result = await waitForExit(child, 7000);
+      const sent = child.kill("SIGTERM");
+      assert.equal(sent, true, "Expected SIGTERM to be sent to child process");
+      const result = await exitPromise;
       assert.ok(result.code === 0 || result.signal === "SIGTERM");
     } finally {
       if (child.exitCode === null && !child.killed) {
