@@ -1,6 +1,6 @@
 {
   "name": "@graduenz/mcp-sqlite-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for SQLite databases using better-sqlite3",
   "main": "dist/index.js",
   "type": "module",
