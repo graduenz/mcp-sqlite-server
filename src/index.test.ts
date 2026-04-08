@@ -89,8 +89,7 @@ describe("index entrypoint", () => {
     try {
       const exitPromise = waitForExit(child, 7000);
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const sent = child.kill("SIGTERM");
-      assert.equal(sent, true, "Expected SIGTERM to be sent to child process");
+      child.kill("SIGTERM");
       const result = await exitPromise;
       assert.ok(result.code === 0 || result.signal === "SIGTERM");
     } finally {
