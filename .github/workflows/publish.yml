@@ -51,4 +51,4 @@ jobs:
           npm view "$PKG_NAME" version || echo "Package not found yet (expected on first publish)."
 
       - name: Publish package
-        run: npm publish --provenance --access public --verbose
+        run: npm publish --provenance --access public
