@@ -30,7 +30,9 @@ async function main(): Promise<void> {
   process.on("SIGTERM", shutdown);
 }
 
-main().catch((err) => {
+try {
+  await main();
+} catch (err) {
   console.error("Fatal:", err);
   process.exit(1);
-});
+}
