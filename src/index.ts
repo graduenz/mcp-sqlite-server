@@ -1,14 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { loadConfig } from "./config.js";
-import { openDatabase, closeDatabase } from "./database.js";
+import { initDatabase } from "./database.js";
 import { registerTools } from "./tools/index.js";
 import { registerResources } from "./resources/index.js";
 
 async function main(): Promise<void> {
   const config = loadConfig();
 
-  openDatabase(config);
+  initDatabase(config);
 
   const server = new McpServer({
     name: "mcp-sqlite-server",
@@ -22,7 +22,6 @@ async function main(): Promise<void> {
   await server.connect(transport);
 
   const shutdown = async () => {
-    closeDatabase();
     await server.close();
     process.exit(0);
   };

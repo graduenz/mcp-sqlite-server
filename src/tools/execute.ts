@@ -1,6 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getDatabase } from "../database.js";
+import { withDatabase } from "../database.js";
 
 export function registerExecuteTool(
   server: McpServer,
@@ -26,24 +26,25 @@ export function registerExecuteTool(
       }
 
       try {
-        const db = getDatabase();
-        const result = db.prepare(sql).run();
+        return withDatabase((db) => {
+          const result = db.prepare(sql).run();
 
-        return {
-          content: [
-            {
-              type: "text" as const,
-              text: JSON.stringify(
-                {
-                  changes: result.changes,
-                  lastInsertRowid: result.lastInsertRowid.toString(),
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify(
+                  {
+                    changes: result.changes,
+                    lastInsertRowid: result.lastInsertRowid.toString(),
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
+          };
+        });
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         return {
