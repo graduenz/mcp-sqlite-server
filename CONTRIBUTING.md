@@ -72,6 +72,52 @@ Or run the full pipeline:
 npm run validate
 ```
 
+## Release and npm Publishing
+
+Publishing is automated by [`.github/workflows/publish.yml`](.github/workflows/publish.yml) and runs when a GitHub Release is published.
+
+### One-time maintainer setup
+
+1. Confirm npm access to publish `@graduenz/mcp-sqlite-server`.
+2. In npm, configure trusted publishing (OIDC) for this GitHub repository.
+3. Ensure repository Actions permissions allow workflows with `id-token: write`.
+4. Confirm package metadata in `package.json` is current before first public release.
+
+### Per-release checklist
+
+1. Run:
+   - `npm run validate`
+   - `npm run build`
+2. Bump `package.json` version.
+3. Create and push a matching tag: `vX.Y.Z`.
+4. Publish a GitHub Release using that tag.
+5. Verify `Publish to npm` workflow succeeded.
+6. Verify the new version is available on npm.
+
+The workflow fails if tag version and `package.json` version do not match.
+
+## Pull Request Build and SonarCloud
+
+CI workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) runs on pull requests and pushes to `main`.
+
+It performs:
+
+1. dependency installation (`npm ci`)
+2. validation (`npm run validate`)
+3. test coverage generation (`npm run test:coverage`)
+4. SonarCloud scan (`SonarSource/sonarqube-scan-action@v7`)
+
+### SonarCloud prerequisites
+
+1. Set `SONAR_TOKEN` in GitHub repository secrets.
+2. Bind this repository to the corresponding SonarCloud project.
+3. Set valid values for:
+   - `sonar.projectKey`
+   - `sonar.organization`
+   in [`.github/workflows/build.yml`](.github/workflows/build.yml).
+
+Coverage is provided to SonarCloud via `coverage/lcov.info`.
+
 ## Testing
 
 The test suite uses Node's built-in test runner (`node:test`) with TypeScript executed directly via `tsx`. No additional test dependencies are needed.
