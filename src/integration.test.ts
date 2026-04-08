@@ -10,9 +10,35 @@ import { initDatabase } from "./database.js";
 import { registerTools } from "./tools/index.js";
 import { registerResources } from "./resources/index.js";
 
-function getTextContent(result: { content: unknown[] }): string {
-  const item = result.content[0] as { type: string; text: string };
-  return item.text;
+function hasContentArray(value: unknown): value is { content: unknown[] } {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return Array.isArray(candidate.content);
+}
+
+function isTextContentItem(value: unknown): value is { type: "text"; text: string } {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return candidate.type === "text" && typeof candidate.text === "string";
+}
+
+function getTextContent(result: unknown): string {
+  if (!hasContentArray(result)) {
+    throw new Error("Tool result does not include a content array");
+  }
+
+  const firstItem = result.content[0];
+  if (!isTextContentItem(firstItem)) {
+    throw new Error("Tool result does not include text content");
+  }
+
+  return firstItem.text;
 }
 
 describe("MCP integration (read-write)", () => {
