@@ -7,7 +7,6 @@ An MCP (Model Context Protocol) server that provides tools and resources for int
 - [mcp-sqlite-server](#mcp-sqlite-server)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
-  - [Setup](#setup)
   - [Configuration](#configuration)
   - [Tools](#tools)
     - [`query`](#query)
@@ -27,20 +26,6 @@ An MCP (Model Context Protocol) server that provides tools and resources for int
 - **Project-Level Configuration** -- database settings live in a `.mcp-sqlite.json` file, not in the MCP client config
 - **WAL Mode** -- enabled by default for better concurrency
 - **Read-Only Mode** -- optionally prevent write operations
-
-## Setup
-
-```bash
-cd mcp-sqlite-server
-npm install
-npm run build
-```
-
-For full local validation (including TypeScript checks for tests), run:
-
-```bash
-npm run validate
-```
 
 ## Configuration
 
@@ -97,7 +82,7 @@ Get detailed schema for a specific table including columns, types, constraints, 
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions, testing, code conventions, and guidance on adding new tools, resources, and config fields.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, release/publish workflow, build instructions, testing, code conventions, and guidance on adding new tools, resources, and config fields.
 
 ## Cursor MCP Configuration
 
@@ -107,8 +92,8 @@ Add the following to `.cursor/mcp.json` in any project that wants to use this se
 {
   "mcpServers": {
     "mcp-sqlite-server": {
-      "command": "node",
-      "args": ["c:/repos/graduenz/mcp-sqlite-server/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "@graduenz/mcp-sqlite-server"]
     }
   }
 }
@@ -122,9 +107,10 @@ To use an explicit config path:
 {
   "mcpServers": {
     "mcp-sqlite-server": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "c:/repos/graduenz/mcp-sqlite-server/dist/index.js",
+        "-y",
+        "@graduenz/mcp-sqlite-server",
         "--config",
         ".mcp-sqlite.json"
       ]
