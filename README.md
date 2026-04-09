@@ -2,6 +2,13 @@
 
 An MCP (Model Context Protocol) server that provides tools and resources for interacting with SQLite databases via [better-sqlite3](https://github.com/WiseLibs/better-sqlite3).
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=graduenz_mcp-sqlite-server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=graduenz_mcp-sqlite-server)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=graduenz_mcp-sqlite-server&metric=bugs)](https://sonarcloud.io/summary/new_code?id=graduenz_mcp-sqlite-server)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=graduenz_mcp-sqlite-server&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=graduenz_mcp-sqlite-server)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=graduenz_mcp-sqlite-server&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=graduenz_mcp-sqlite-server)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=graduenz_mcp-sqlite-server&metric=coverage)](https://sonarcloud.io/summary/new_code?id=graduenz_mcp-sqlite-server)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=graduenz_mcp-sqlite-server&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=graduenz_mcp-sqlite-server)
+
 ## Table of Contents
 
 - [mcp-sqlite-server](#mcp-sqlite-server)
