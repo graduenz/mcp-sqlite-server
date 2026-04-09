@@ -16,6 +16,7 @@ An MCP (Model Context Protocol) server that provides tools and resources for int
   - [Resources](#resources)
   - [Contributing](#contributing)
   - [Cursor MCP Configuration](#cursor-mcp-configuration)
+    - [Multiple Databases (Two MCP Servers)](#multiple-databases-two-mcp-servers)
   - [License](#license)
 
 
@@ -128,6 +129,60 @@ Then create `.mcp-sqlite.json` in the project root:
   "wal": true
 }
 ```
+
+### Multiple Databases (Two MCP Servers)
+
+If your project has multiple SQLite databases, run one MCP server instance per database.
+Each instance needs its own server name in `.cursor/mcp.json` and its own config file passed with `--config`.
+
+```json
+{
+  "mcpServers": {
+    "sqlite-main": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@graduenz/mcp-sqlite-server",
+        "--config",
+        ".mcp-sqlite.main.json"
+      ]
+    },
+    "sqlite-analytics": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@graduenz/mcp-sqlite-server",
+        "--config",
+        ".mcp-sqlite.analytics.json"
+      ]
+    }
+  }
+}
+```
+
+Create a config file for each database:
+
+`.mcp-sqlite.main.json`:
+
+```json
+{
+  "database": "./data/main.sqlite",
+  "readonly": false,
+  "wal": true
+}
+```
+
+`.mcp-sqlite.analytics.json`:
+
+```json
+{
+  "database": "./data/analytics.sqlite",
+  "readonly": true,
+  "wal": true
+}
+```
+
+When prompting in Cursor, specify which MCP server to use (`sqlite-main` or `sqlite-analytics`) based on the database you want to query.
 
 ## License
 
