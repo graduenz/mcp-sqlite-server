@@ -1,9 +1,4 @@
----
-description: Project conventions and standards for mcp-sqlite-server
-alwaysApply: true
----
-
-# mcp-sqlite-server — Project Rules
+# mcp-sqlite-server — Project Conventions
 
 ## Stack
 
